@@ -3,6 +3,27 @@ from django import forms
 
 class FieldsetsInlineMixin(object):
     change_form_template = 'fieldsets_with_inlines/change_form.html'
+    add_form_template = 'fieldsets_with_inlines/change_form.html'
+
+    def add_view(self, *args, extra_context=None, **kwargs):
+        extra_context = extra_context or {}
+        extra_context["original_template"] = (
+            super().add_form_template or "admin/change_form.html"
+        )
+
+        return super().add_view(
+            *args, extra_context=extra_context, **kwargs
+        )
+
+    def change_view(self, *args, extra_context=None, **kwargs):
+        extra_context = extra_context or {}
+        extra_context["original_template"] = (
+            super().change_form_template or "admin/change_form.html"
+        )
+
+        return super().change_view(
+            *args, extra_context=extra_context, **kwargs
+        )
 
     def make_placeholder(self, index, fieldset):
         if isinstance(fieldset, forms.MediaDefiningClass):
